@@ -3,7 +3,12 @@ const Gadget = require('../models/gadgetModel');
 // create gadget
 exports.createGadget = async (req, res) => {
   try {
-    const gadget = new Gadget(req.body);
+    const gadgetData = { ...req.body };
+    if (req.file) {
+      gadgetData.image = req.file.path;
+    }
+
+    const gadget = new Gadget(gadgetData);
     await gadget.save();
 
     res.status(201).json({

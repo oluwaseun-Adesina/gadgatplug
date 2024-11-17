@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const userRoutes = require('./routes/userRoutes');
 const gadgetRoutes = require('./routes/gadgetRoutes');
+const AppError = require('./utils/AppError');
+const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
 
@@ -11,5 +13,15 @@ app.use(express.json());
 
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/gadget', gadgetRoutes);
+
+// Error handling middleware
+// NOT FOUND URL
+
+app.all('*', (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+});
+
+// ERROR HANDLER
+app.use(globalErrorHandler);
 
 module.exports = app;

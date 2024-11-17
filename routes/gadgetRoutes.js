@@ -10,8 +10,12 @@ const {
 } = require('../controllers/gadgetController');
 const validateGadget = require('../middlewares/gadgetValidator');
 
+const uploadImage = require('../middlewares/uploadImage');
+
+// create a gadget with image upload
+
 // Create a gadget
-router.post('/', validateGadget, createGadget);
+router.post('/', uploadImage, validateGadget, createGadget);
 
 // Get all gadgets
 router.get('/', getAllGadgets);
@@ -20,7 +24,7 @@ router.get('/', getAllGadgets);
 router.get('/:id', getGadget);
 
 // Update a gadget by ID
-router.put('/:id', updateGadget);
+router.put('/:id', uploadImage, validateGadget, updateGadget);
 
 // Delete a gadget by ID
 router.delete('/:id', deleteGadget);

@@ -2,39 +2,6 @@ const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// exports.createUser = async (req, res) => {
-//     try {
-
-//     } catch (err) {
-//         return res.status(500).json({
-//             status: 'error',
-//             message: err.message
-//         })
-//     }
-// }
-
-// exports.getUser = async (req, res) => {
-//     try {
-
-//     } catch (err) {
-//         return res.status(500).json({
-//             status: 'error',
-//             message: err.message
-//         })
-//     }
-// }
-
-// exports.updateUser = async (req, res) => {
-//     try {
-
-//     } catch (err) {
-//         return res.status(500).json({
-//             status: 'error',
-//             message: err.message
-//         })
-//     }
-// }
-
 // register user
 exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;

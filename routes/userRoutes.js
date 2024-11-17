@@ -4,7 +4,7 @@ const {
   validateUserLogin,
   validateUserRegistration,
 } = require('../middlewares/userValidator');
-const { registerUser, loginUser } = require('../controllers/userController');
+const { registerUser, loginUser } = require('../controllers/authController');
 
 // register user
 router.post('/register', validateUserRegistration, registerUser);
