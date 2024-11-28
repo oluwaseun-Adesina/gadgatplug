@@ -1,15 +1,33 @@
-const express = require('express');
-const router = express.Router();
-const {
-  validateUserLogin,
-  validateUserRegistration,
-} = require('../middlewares/userValidator');
-const { registerUser, loginUser } = require('../controllers/authController');
+const express = require('express')
+const userController = require('../controllers/userController')
+const authController = require('../controllers/authController')
 
-// register user
-router.post('/register', validateUserRegistration, registerUser);
+const router = express.Router()
 
-// login
-router.post('/login', validateUserLogin, loginUser);
+router.post('/signup', authController.signup)
+router.post('/login', authController.login)
+router.post('/forgotPassword', authController.forgetPassword)
+router.patch('/resetPassword/:token', authController.resetPassword)
 
-module.exports = router;
+// protect all route afterward
+router.use(authController.protect)
+
+router.patch('/updateMyPassword', authController.updatePassword)
+router.get('/me', userController.getMe, userController.getUser)
+router.patch('/updateMe', userController.updateMe)
+router.delete('/deleteMe', userController.deleteMe)
+
+router.use(authController.restrictTo('admin'))
+
+router
+    .route('/')
+    .get(userController.getAllUsers)
+    .post(userController.createUser)
+
+router
+    .route('/:id')
+    .get(userController.getUser)
+    .patch(userController.updateUser)
+    .delete(userController.deleteUser)
+
+module.exports = router
