@@ -7,7 +7,11 @@ const {
   getGadget,
   updateGadget,
   deleteGadget,
+  uploadGadgetImages,
+  getCategory
 } = require('../controllers/gadgetController');
+
+const uploadImage = require('../utils/uploadImage')
 const validateGadget = require('../middlewares/gadgetValidator');
 
 const uploadImage = require('../middlewares/uploadImage');
@@ -15,13 +19,16 @@ const uploadImage = require('../middlewares/uploadImage');
 // create a gadget with image upload
 
 // Create a gadget
-router.post('/', uploadImage, validateGadget, createGadget);
+router.post('/', uploadImage, uploadGadgetImages, validateGadget, createGadget);
 
 // Get all gadgets
 router.get('/', getAllGadgets);
 
 // Get a single gadget by ID
 router.get('/:id', getGadget);
+
+// Get gadget category 
+router.get('/category', getCategory)
 
 // Update a gadget by ID
 router.put('/:id', uploadImage, validateGadget, updateGadget);
