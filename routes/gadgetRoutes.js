@@ -14,7 +14,6 @@ const {
 const uploadImage = require('../utils/uploadImage')
 const validateGadget = require('../middlewares/gadgetValidator');
 
-const uploadImage = require('../middlewares/uploadImage');
 
 // create a gadget with image upload
 
