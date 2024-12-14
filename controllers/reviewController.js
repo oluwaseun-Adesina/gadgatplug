@@ -21,10 +21,17 @@ exports.createReview = catchAsync(async (req, res, next) => {
 
 // get all reviews for a specific gadget
 exports.getReviewByGagdget = catchAsync(async (req, res, next) => {
-  const reviews = await Review.find({ gadget: req.params.gadgetId }).populate(
-    'user',
-    'name'
-  );
+  // pagination
+  const page = req.query.page * 1 || 1;
+  const limit = req.query.limit * 1 || 10;
+  const skip = (page - 1) * limit;
+
+  const reviews = await Review.find({ gadget: req.params.gadgetId })
+    .populate('user', 'name')
+    .sort('createdAt')
+    .skip(skip)
+    .limit(limit);
+
   res.status(200).json({
     status: 'success',
     results: reviews.length,

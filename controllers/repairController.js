@@ -96,10 +96,28 @@ exports.deleteRepair = catchAsync(async (req, res, next) => {
 // get all repair
 
 exports.getAllRepairsAdmin = catchAsync(async (req, res, next) => {
-  const repairs = await Repair.find();
+  // filter by status
+  const { status } = req.query;
+  const query = status ? { status } : {};
+  // sorting
+  const sort = req.query.sort ? req.query.sort : '-createdAt';
+  // pagination
+  const page = req.query.page * 1 || 1;
+  const limit = req.query.limit * 1 || 10;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+  const total = await Repair.countDocuments(query);
+
+  const repairs = await Repair.find(query)
+    .populate('user')
+    .sort(sort)
+    .skip(startIndex)
+    .limit(limit);
 
   res.status(200).json({
     status: 'success',
+    result: repairs.length,
+    total,
     data: { repairs },
   });
 });
