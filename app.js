@@ -12,7 +12,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 app.use('/api/v1/users', userRoutes);
-app.use('/api/v1/gadget', gadgetRoutes);
+app.use('/api/v1/gadgets', gadgetRoutes);
 
 // Error handling middleware
 // NOT FOUND URL
