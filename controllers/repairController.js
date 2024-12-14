@@ -5,7 +5,7 @@ const AppError = require('../utils/appError');
 // create a repair
 
 exports.createRepair = catchAsync(async (req, res, next) => {
-  req.body.repairer = req.user._id;
+  req.body.user = req.user._id;
   const repair = await Repair.create(req.body);
 
   res.status(201).json({
@@ -18,7 +18,7 @@ exports.createRepair = catchAsync(async (req, res, next) => {
 
 exports.getAllRepairs = catchAsync(async (req, res, next) => {
   const user = req.user._id;
-  const repairs = await Repair.find({ repairer: user });
+  const repairs = await Repair.find({ user: user });
 
   res.status(200).json({
     status: 'success',
@@ -32,7 +32,7 @@ exports.getRepair = catchAsync(async (req, res, next) => {
 
   const repair = await Repair.findById(req.params.id).populate('repairer');
 
-  if (user.role !== 'admin' || repair.repairer !== user._id) {
+  if (user.role !== 'admin' || repair.user !== user._id) {
     return next(
       new AppError('You are not authorized to access this repair', 403)
     );
@@ -53,12 +53,9 @@ exports.updateRepair = catchAsync(async (req, res, next) => {
 
   const { gadget, description } = req.body;
 
-  const repair = await Repair.findByIdAndUpdate(req.params.id, {
-    gadget,
-    description,
-  }).populate('repairer');
+  const repair = await Repair.findById(req.params.id).populate('user');
 
-  if (user.role !== 'admin' || repair.repairer !== user._id) {
+  if (user.role !== 'admin' || repair.user !== user._id) {
     return next(
       new AppError('You are not authorized to access this repair', 403)
     );
@@ -80,7 +77,7 @@ exports.deleteRepair = catchAsync(async (req, res, next) => {
 
   const repair = await Repair.findByIdAndDelete(req.params.id);
 
-  if (user.role !== 'admin' || repair.repairer !== user._id) {
+  if (user.role !== 'admin' || repair.user !== user._id) {
     return next(
       new AppError('You are not authorized to access this repair', 403)
     );

@@ -6,7 +6,7 @@ const repairSchema = new mongoose.Schema({
     ref: 'Gadget',
     required: [true, 'Repair must belong to a gadget'],
   },
-  repairer: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: [true, 'Repair must belong to a user'],
