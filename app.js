@@ -4,10 +4,12 @@ const userRoutes = require('./routes/userRoutes');
 const gadgetRoutes = require('./routes/gadgetRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
+const cors = require('cors');
 
 const app = express();
 
 // middlewares
+app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 

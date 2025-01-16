@@ -3,6 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 const axios = require('axios');
+const cloudinary = require('../config/cloudinary');
 
 // create gadget
 // Suggested code may be subject to a license. Learn more: ~LicenseLog:2730847680.
@@ -10,6 +11,24 @@ const axios = require('axios');
 
 exports.createGadget = catchAsync(async (req, res, next) => {
   req.body.addedBy = req.user._id;
+
+  const images = [];
+
+  if (req.files && req.files.length > 0) {
+    for (const file of req.files) {
+      const base64Image = `data:${file.mimetype};base64,${file.buffer.toString(
+        'base64'
+      )}`;
+
+      // Upload to Cloudinary
+      const result = await cloudinary.uploader.upload(base64Image, {
+        folder: 'gadgets', // Optional: Add folder for better organization
+      });
+      images.push({ url: result.secure_url, public_id: result.public_id });
+    }
+  }
+
+  req.body.images = images;
 
   const newGadget = await Gadget.create(req.body);
 
@@ -65,19 +84,6 @@ exports.updateGadget = factory.updateOne(Gadget);
 
 // delete a gadget by Id
 exports.deleteGadget = factory.deleteOne(Gadget);
-
-// image upload
-exports.uploadGadgetImages = catchAsync(async (req, res, next) => {
-  if (!req.files.image || !req.files.image2 || !req.files.image3) {
-    return next(new AppError('Please upload all images', 400));
-  }
-  req.body.image = req.files.image[0].filename;
-  req.body.image2 = req.files.image2[0].filename;
-  req.body.image3 = req.files.image3[0].filename;
-
-  next();
-});
-
 // getAll Category
 exports.getCategory = catchAsync(async (req, res, next) => {
   const category = req.params.gadgetCategory;
